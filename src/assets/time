@@ -1,0 +1,5 @@
+for i in {1..350}
+do
+pgrep -x test;
+sleep 2;
+done
